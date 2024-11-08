@@ -1,4 +1,5 @@
 import 'package:crud_tuto/pages/home_page.dart';
+import 'package:crud_tuto/pages/login_or_register_page.dart';
 import 'package:crud_tuto/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +12,18 @@ class AuthPage extends StatelessWidget {
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot){
+        builder: (context, snapshot) {
           // USER IS LOGGED IN
-          if (snapshot.hasData){
+          if (snapshot.hasData) {
             return HomePage();
-
           }
 
           //USER IS NOT LOGGED IN
-          else{
-            return LoginPage();
+          else {
+            return LoginOrRegisterPage();
           }
-
         },
-        ),
+      ),
     );
   }
 }
