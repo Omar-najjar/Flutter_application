@@ -1,12 +1,14 @@
 import 'package:crud_tuto/components/my_button.dart';
 import 'package:crud_tuto/components/my_textfield.dart';
 import 'package:crud_tuto/components/square_tile.dart';
+import 'package:crud_tuto/pages/home_page.dart';
+import 'package:crud_tuto/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  RegisterPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -15,22 +17,22 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  // Méthode pour afficher un message d'erreur
-  void showErrorDialog(String message) {
+  // Méthode pour afficher un message d'erreur ou de succès
+  void showMessageDialog(String message, {bool isSuccess = false}) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.blue[500],
-          title: const Text('Erreur',style: TextStyle(color: Colors.white)),
-          content: Text(message),
+          backgroundColor: isSuccess ? Colors.green[500] : Colors.blue[500],
+          title: Text(isSuccess ? 'Succès' : 'Erreur',
+              style: const TextStyle(color: Colors.white)),
+          content: Text(message, style: const TextStyle(color: Colors.white)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK',
-              style: TextStyle(color: Colors.white),),
-              
+              child: const Text('OK', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -38,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // Méthode de connexion de l'utilisateur
+  // Méthode pour inscrire l'utilisateur
   Future<void> signUserUp() async {
     // Affichage du cercle de chargement
     showDialog(
@@ -49,29 +51,56 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
 
-
-      // try creating the user
     try {
-      // Tentative de connexion
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      // Vérification si les mots de passe correspondent
+      if (passwordController.text == confirmPasswordController.text) {
+        // Création de l'utilisateur
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
 
-      // Fermer le cercle de chargement après connexion réussie
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // Fermer le cercle de chargement si une erreur survient
-      Navigator.pop(context);
+        // Fermeture du cercle de chargement
+        Navigator.pop(context);
 
-      // Afficher le message d'erreur en fonction du code d'erreur
-      if (e.code == 'user-not-found') {
-        showErrorDialog('Incorrect Email: The email you entered is not registered.');
-      } else if (e.code == 'wrong-password') {
-        showErrorDialog('Incorrect Password: The password you entered is incorrect.');
+        // Affichage du message de succès
+        showMessageDialog("Inscription réussie !", isSuccess: true);
+
+        // Redirection vers la page de connexion après un court délai pour lire le message
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.pop(context); // Retour à la page de connexion
       } else {
-        showErrorDialog('Identifiant ou mot de passe invalide !');
+        // Fermeture du cercle de chargement
+        Navigator.pop(context);
+        // Afficher un message d'erreur si les mots de passe ne correspondent pas
+        showMessageDialog("Les mots de passe ne correspondent pas !");
       }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); // Fermer le cercle de chargement
+      if (e.code == 'email-already-in-use') {
+        showMessageDialog("Cet e-mail est déjà utilisé.");
+      } else if (e.code == 'invalid-email') {
+        showMessageDialog("Adresse e-mail invalide.");
+      } else if (e.code == 'weak-password') {
+        showMessageDialog("Le mot de passe est trop faible.");
+      } else {
+        showMessageDialog("Une erreur est survenue. Veuillez réessayer.");
+      }
+    }
+  }
+
+  // Connexion avec Google
+  Future<void> signInWithGoogle() async {
+    try {
+      final user = await AuthService().signInWithGoogle();
+      if (user != null) {
+        // Redirection vers une page appropriée après une connexion réussie
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        showMessageDialog("Connexion avec Google annulée ou échouée.");
+      }
+    } catch (e) {
+      showMessageDialog("Erreur lors de la connexion avec Google: $e");
     }
   }
 
@@ -99,23 +128,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
-
                 MyTextfield(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-
-
                 const SizedBox(height: 10),
-
                 MyTextfield(
-                  controller: passwordController,
+                  controller: confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
-
-                
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -130,9 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                MyButton(
-                  text: "Sign Up",
-                  onTap: signUserUp),
+                MyButton(text: "Sign Up", onTap: signUserUp),
                 const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -158,9 +179,26 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(ImagePath: 'lib/images/google.png'),
+                    SquareTile(
+  onTap: () async {
+    User? user = await AuthService().signInWithGoogle();
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      showMessageDialog("Échec de la connexion avec Google");
+    }
+  },
+  ImagePath: 'lib/images/google.png',
+),
+
                     const SizedBox(width: 25),
-                    SquareTile(ImagePath: 'lib/images/apple.png'),
+                    SquareTile(
+                      onTap: () => showMessageDialog("Apple sign-in not implemented."),
+                      ImagePath: 'lib/images/apple.png',
+                    ),
                   ],
                 ),
                 const SizedBox(height: 50),
@@ -172,8 +210,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     const SizedBox(width: 4),
-                  GestureDetector(
-                    onTap: widget.onTap,
+                    GestureDetector(
+                      onTap: widget.onTap,
                       child: const Text(
                         'Login now',
                         style: TextStyle(

@@ -1,10 +1,9 @@
 import 'package:crud_tuto/firebase_options.dart';
 import 'package:crud_tuto/pages/auth_page.dart';
+import 'package:crud_tuto/pages/menu_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'pages/login_page.dart';
 
-import 'pages/home_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

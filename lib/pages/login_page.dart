@@ -1,12 +1,13 @@
 import 'package:crud_tuto/components/my_button.dart';
 import 'package:crud_tuto/components/my_textfield.dart';
 import 'package:crud_tuto/components/square_tile.dart';
+import 'package:crud_tuto/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
-  LoginPage({super.key, required this.onTap});
+  const LoginPage({super.key, required this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -142,13 +143,36 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 50),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SquareTile(ImagePath: 'lib/images/google.png'),
-                    const SizedBox(width: 25),
-                    SquareTile(ImagePath: 'lib/images/apple.png'),
-                  ],
-                ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    // Bouton Google Sign-In
+    SquareTile(
+      onTap: () async {
+        // Essayer de se connecter avec Google
+        User? user = await AuthService().signInWithGoogle();
+
+        if (user != null) {
+          // Rediriger vers la page d'accueil ou une autre page si la connexion est réussie
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          // Afficher un message d'erreur si la connexion échoue ou est annulée
+          showErrorDialog("Google sign-in failed or was canceled.");
+        }
+      },
+      ImagePath: 'lib/images/google.png',
+    ),
+    const SizedBox(width: 25),
+    
+    // Placeholder pour le bouton Apple (à implémenter si nécessaire)
+    SquareTile(
+      onTap: () {
+        showErrorDialog("Apple sign-in not implemented.");
+      },
+      ImagePath: 'lib/images/apple.png',
+    ),
+  ],
+),
+
                 const SizedBox(height: 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
