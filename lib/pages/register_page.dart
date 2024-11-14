@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_tuto/components/my_button.dart';
 import 'package:crud_tuto/components/my_textfield.dart';
 import 'package:crud_tuto/components/square_tile.dart';
@@ -19,7 +20,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final firstNameController = TextEditingController(); // Contrôleur pour le prénom
-  final lastNameController = TextEditingController();  // Contrôleur pour le nom
+  final lastNameController = TextEditingController();
+
+
 
   // Méthode pour afficher un message d'erreur ou de succès
   void showMessageDialog(String message, {bool isSuccess = false}) {
@@ -57,17 +60,24 @@ class _RegisterPageState extends State<RegisterPage> {
       // Vérification si les mots de passe correspondent
       if (passwordController.text == confirmPasswordController.text) {
         // Création de l'utilisateur
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
+
+        // Stocker le prénom dans Firestore
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'firstName': firstNameController.text,
+          'lastName': lastNameController.text,
+          'email': emailController.text,
+        });
 
         // Fermeture du cercle de chargement
         Navigator.pop(context);
 
         // Affichage du message de succès
         showMessageDialog("Inscription réussie !", isSuccess: true);
-
+    
         // Redirection vers la page de connexion après un court délai pour lire le message
         await Future.delayed(const Duration(seconds: 2));
         Navigator.pop(context); // Retour à la page de connexion
@@ -243,3 +253,5 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
+
+
