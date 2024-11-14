@@ -22,11 +22,11 @@ final bool obscureText;
               controller: controller,
         obscureText: obscureText,
               decoration: InputDecoration(
-                enabledBorder:const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary,),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary,),
                 ), 
                 fillColor: Colors.grey.shade200,
                 filled: true,

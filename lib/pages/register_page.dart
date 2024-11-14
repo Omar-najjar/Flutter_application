@@ -18,6 +18,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final firstNameController = TextEditingController(); // Contrôleur pour le prénom
+  final lastNameController = TextEditingController();  // Contrôleur pour le nom
 
   // Méthode pour afficher un message d'erreur ou de succès
   void showMessageDialog(String message, {bool isSuccess = false}) {
@@ -115,43 +117,60 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 25),
-                const Icon(Icons.lock, size: 100),
-                const SizedBox(height: 25),
-                Text(
-                  'Lest\'s create an account for you!',
-                  style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                Icon(
+                  Icons.lock,
+                  size: 100,
+                  color: Theme.of(context).colorScheme.inversePrimary,
                 ),
                 const SizedBox(height: 25),
+                Text(
+                  'Let\'s create an account for you!',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 25),
+
+                // Champ pour le prénom
+                MyTextfield(
+                  controller: firstNameController,
+                  hintText: 'First Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+
+                // Champ pour le nom
+                MyTextfield(
+                  controller: lastNameController,
+                  hintText: 'Last Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+
+                // Champ pour l'email
                 MyTextfield(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
+
+                // Champ pour le mot de passe
                 MyTextfield(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
+
+                // Champ pour confirmer le mot de passe
                 MyTextfield(
                   controller: confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forget Password?',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                ),
+
                 const SizedBox(height: 25),
                 MyButton(text: "Sign Up", onTap: signUserUp),
                 const SizedBox(height: 50),
@@ -180,24 +199,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SquareTile(
-  onTap: () async {
-    User? user = await AuthService().signInWithGoogle();
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else {
-      showMessageDialog("Échec de la connexion avec Google");
-    }
-  },
-  ImagePath: 'lib/images/google.png',
-),
-
-                    const SizedBox(width: 25),
-                    SquareTile(
-                      onTap: () => showMessageDialog("Apple sign-in not implemented."),
-                      ImagePath: 'lib/images/apple.png',
+                      onTap: () async {
+                        User? user = await AuthService().signInWithGoogle();
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        } else {
+                          showMessageDialog("Échec de la connexion avec Google");
+                        }
+                      },
+                      ImagePath: 'lib/images/google.png',
                     ),
                   ],
                 ),

@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -85,11 +85,16 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const Icon(Icons.lock, size: 100),
+                 Icon(
+                  Icons.lock_open_rounded,
+                  size: 100 ,
+                  color: Theme.of(context).colorScheme.inversePrimary,),
                 const SizedBox(height: 50),
                 Text(
                   'Welcome back, you\'ve been missed!',
-                  style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16),
                 ),
                 const SizedBox(height: 25),
                 MyTextfield(
@@ -111,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Text(
                         'Forget Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary,),
                       ),
                     ],
                   ),
@@ -122,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: signUserIn),
                 const SizedBox(height: 50),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
                       Expanded(
@@ -163,13 +169,7 @@ class _LoginPageState extends State<LoginPage> {
     ),
     const SizedBox(width: 25),
     
-    // Placeholder pour le bouton Apple (à implémenter si nécessaire)
-    SquareTile(
-      onTap: () {
-        showErrorDialog("Apple sign-in not implemented.");
-      },
-      ImagePath: 'lib/images/apple.png',
-    ),
+    
   ],
 ),
 
@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
                     ),
                     const SizedBox(width: 4),
                   GestureDetector(
