@@ -64,6 +64,9 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text,
           password: passwordController.text,
         );
+        // Fermeture du cercle de chargement
+        Navigator.pop(context);
+
 
         // Stocker le prénom dans Firestore
         await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
@@ -77,24 +80,36 @@ class _RegisterPageState extends State<RegisterPage> {
 
         // Affichage du message de succès
         showMessageDialog("Inscription réussie !", isSuccess: true);
-    
-        // Redirection vers la page de connexion après un court délai pour lire le message
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.pop(context); // Retour à la page de connexion
-      } else {
+
         // Fermeture du cercle de chargement
         Navigator.pop(context);
+
+        // Redirection vers la page de connexion après un court délai pour lire le message
+        await Future.delayed(const Duration(seconds: 1));
+
+
+        widget.onTap?.call(); // Navigue vers la page de connexion
+      } else {
+
+        // Fermeture du cercle de chargement
+        Navigator.pop(context);
+
         // Afficher un message d'erreur si les mots de passe ne correspondent pas
         showMessageDialog("Les mots de passe ne correspondent pas !");
       }
     } on FirebaseAuthException catch (e) {
+
       Navigator.pop(context); // Fermer le cercle de chargement
+
       if (e.code == 'email-already-in-use') {
         showMessageDialog("Cet e-mail est déjà utilisé.");
+
       } else if (e.code == 'invalid-email') {
         showMessageDialog("Adresse e-mail invalide.");
+
       } else if (e.code == 'weak-password') {
         showMessageDialog("Le mot de passe est trop faible.");
+
       } else {
         showMessageDialog("Une erreur est survenue. Veuillez réessayer.");
       }

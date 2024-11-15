@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bonjour ${userFirstName ?? ''}"),
+        title: Text("Bienvenue ${userFirstName ?? ''}"),
         backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
 
@@ -53,67 +53,106 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 30),
           // Exemple de carte de recette
           Card(
-            child: ListTile(
-              leading: Image.asset(
-                'lib/images/plats.jpg', // Chemin vers ton image locale
-                width: 300, // Ajuste la taille si nécessaire
-                height: 300, // Ajuste la taille si nécessaire
-                //fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
-              ),
-              title: const Text("PLATS"),
-              subtitle: const Text("Vous trouverez tous les recettes de plats içi !"
+margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            color: Theme.of(context).colorScheme.secondary,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+
+                leading: Image.asset(
+                  'lib/images/plats.jpg', // Chemin vers ton image locale
+                  width: 220, // Ajuste la taille si nécessaire
+                  height: 220, // Ajuste la taille si nécessaire
+
+
+                  //fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
+                ),
+                title:  Text("PLATS",
+                  style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),),
+                subtitle:  Text("Vous trouverez tous les recettes de plats içi !",
+                  style: TextStyle(
+
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
-              onTap: () {
-                // Action lors du clic sur une recette
+                    ),
+                onTap: () {
+                  // Action lors du clic sur une recette
 
 
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context)=>const PlatPage(),
-                    )
-                );
-              },
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)=>const PlatPage(),
+                      )
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 30),
           Card(
-            child: ListTile(
-              leading: Image.asset(
-                'lib/images/salades.jpg', // Chemin vers ton image locale
-                width: 300, // Ajuste la taille si nécessaire
-                height: 300, // Ajuste la taille si nécessaire
-               // fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
-              ),
-              title: const Text("SALADES"),
-              subtitle: const Text("Vous trouverez tous les recettes de salades içi ! "
-              ),
-              onTap: () {
-                // Action lors du clic sur une recette
+            margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            color: Theme.of(context).colorScheme.secondary,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                leading: Image.asset(
+                  'lib/images/salades.jpg', // Chemin vers ton image locale
+                  width: 220, // Ajuste la taille si nécessaire
+                  height: 220, // Ajuste la taille si nécessaire
+                 // fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
+                ),
+                title:  Text("SALADES",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),),
+                subtitle:  Text("Vous trouverez tous les recettes de salades içi ! ",
+                  style: TextStyle(
+
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                onTap: () {
+                  // Action lors du clic sur une recette
 
 
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context)=>const SaladePage(),
-                    )
-                );
-              },
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)=>const SaladePage(),
+                      )
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 30),
           Card(
+            margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            color: Theme.of(context).colorScheme.secondary,
             child: ListTile(
               leading: Image.asset(
                 'lib/images/gateau.jpg', // Chemin vers ton image locale
-                width: 300, // Ajuste la taille si nécessaire
-                height: 300, // Ajuste la taille si nécessaire
+                width: 220, // Ajuste la taille si nécessaire
+                height: 220, // Ajuste la taille si nécessaire
                 //fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
               ),
-              title: const Text("GATEAUX"),
-              subtitle: const Text("Vous trouverez tous les recettes de gateaux içi !"
+              title:  Text("GATEAUX",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),),
+              subtitle:  Text("Vous trouverez tous les recettes de gateaux içi !",
+                style: TextStyle(
+
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ),
               onTap: () {
                 // Action lors du clic sur une recette
@@ -130,15 +169,25 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 30),
           Card(
+            margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            color: Theme.of(context).colorScheme.secondary,
             child: ListTile(
               leading: Image.asset(
                 'lib/images/jus.jpg', // Chemin vers ton image locale
-                width: 300, // Ajuste la taille si nécessaire
-                height: 300, // Ajuste la taille si nécessaire
+                width: 220, // Ajuste la taille si nécessaire
+                height: 220, // Ajuste la taille si nécessaire
                 //fit: BoxFit.cover, // Permet de gérer le redimensionnement de l'image
               ),
-              title: const Text("JUS"),
-              subtitle: const Text("Vous trouverez tous les recettes des jus içi !"
+              title:  Text("JUS",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),),
+              subtitle: Text("Vous trouverez tous les recettes des jus içi !",
+                style: TextStyle(
+
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ),
               onTap: () {
                 // Action lors du clic sur une recette

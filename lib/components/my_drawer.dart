@@ -1,7 +1,9 @@
 import 'package:crud_tuto/components/my_drawer_tile.dart';
 import 'package:crud_tuto/pages/login_or_register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/home_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 
@@ -34,7 +36,15 @@ class MyDrawer extends StatelessWidget {
           MyDrawerTile(
               text: 'H O M E',
               icon: Icons.home,
-              onTap: () => Navigator.pop(context),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context)=>const HomePage(),
+                    )
+                );
+              }
           ),
 
           MyDrawerTile(
@@ -67,17 +77,25 @@ class MyDrawer extends StatelessWidget {
           const Spacer(),
 
           MyDrawerTile(
-              text: 'L O G O U T ',
-              icon: Icons.logout,
-              onTap: (){
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context)=>const LoginOrRegisterPage(),)
-                );
-              }
+            text: 'L O G O U T ',
+            icon: Icons.logout,
+            onTap: () async {
+              // Fermer le drawer avant de faire d'autres actions
+              Navigator.pop(context);
+
+              // Déconnecter l'utilisateur de Firebase
+              await FirebaseAuth.instance.signOut();
+
+              // Rediriger vers la page de connexion
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginOrRegisterPage(),
+                ),
+              );
+            },
           ),
+
           const SizedBox(height: 25,),
 
         ],
